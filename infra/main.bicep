@@ -1,21 +1,41 @@
 targetScope = 'resourceGroup'
 
-param location string = resourceGroup().location
-param projectName string = 'SAFEGlobal'
+@description('App Service Plan name')
+param appServicePlanName string = 'safeglobal-asp'
 
-module network './network.bicep' = {
-  name: 'network-deployment'
-  params: {
-    location: location
-    projectName: projectName
+@description('Gateway Web App name')
+param webAppName string = 'safeglobal-gateway'
+
+@description('Azure region')
+param location string = 'southindia'
+
+// App Service Plan (Windows)
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
+  name: appServicePlanName
+  location: location
+  sku: {
+    name: 'B1'
+    tier: 'Basic'
+    size: 'B1'
+    capacity: 1
+  }
+  kind: 'app'
+  properties: {
+    reserved: false // Windows
   }
 }
 
-module appservice './appservice.bicep' = {
-  name: 'appservice-deployment'
-  params: {
-    location: location
-    projectName: projectName
-    appSubnetId: network.outputs.appSubnetId
+// Web App for YARP Gateway
+resource webApp 'Microsoft.Web/sites@2022-09-01' = {
+  name: webAppName
+  location: location
+  kind: 'app'
+  properties: {
+    serverFarmId: appServicePlan.id
+    siteConfig: {
+      netFrameworkVersion: 'v8.0'
+      alwaysOn: true
+    }
+    httpsOnly: true
   }
 }
