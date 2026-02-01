@@ -1,0 +1,9 @@
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\safeglobal.gateway.exe
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\appsettings.Development.json
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\appsettings.json
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\safeglobal.gateway.dll
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\safeglobal.gateway.deps.json
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\safeglobal.gateway.runtimeconfig.json
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\safeglobal.gateway.pdb
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\System.IO.Hashing.dll
+D:\azure\safeglobal\src\safeglobal.gateway\bin\Release\net8.0\publish\Yarp.ReverseProxy.dll
