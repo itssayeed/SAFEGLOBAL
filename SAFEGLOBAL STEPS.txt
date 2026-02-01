@@ -1,0 +1,342 @@
+Running both API locally works
+==============================
+dotnet run 
+
+http://localhost:5160/api/loans 
+http://localhost:5262/api/mortgages
+
+Run Gateway project like 
+======================
+dotnet run --urls=http://localhost:5000
+
+validate APIS via gateway URL
+http://localhost:5000/mortgages/api/mortgages
+http://localhost:5000/loans/api/loans
+
+
+Create App Servie Plan
+=====================
+az appservice plan create `
+  --name safeglobal-asp `
+  --resource-group safeglobal-rg `
+  --location southindia `
+  --sku B1
+
+Create Azure Web App to host On API (Mortgage.API)
+==================================================
+az webapp create `
+  --name safeglobal-mortgage-api `
+  --resource-group safeglobal-rg `
+  --plan safeglobal-asp `
+  --runtime "DOTNET:8"
+
+Navigate to Mortgage.API folder 
+================================
+dotnet publish -c Release
+
+ZIP
+===
+Compress-Archive `
+  -Path .\bin\Release\net8.0\publish\* `
+  -DestinationPath mortgage-api.zip `
+  -Force
+
+Deploy
+======
+az webapp deploy `
+  --resource-group safeglobal-rg `
+  --name safeglobal-mortgage-api `
+  --src-path .\mortgage-api.zip `
+  --type zip
+
+
+Test Mortgage API
+=================
+https://safeglobal-mortgage-api.azurewebsites.net/api/mortgages
+
+Test Mortgage API via LOCALLY Gateway
+====================================
+Gayeway project appsettings.json
+================================
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "ReverseProxy": {
+    "Routes": {
+      "mortgageRoute": {
+        "ClusterId": "mortgageCluster",
+        "Match": {
+          "Path": "/mortgages/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/mortgages" }
+        ]
+      },
+      "loanRoute": {
+        "ClusterId": "loanCluster",
+        "Match": {
+          "Path": "/loans/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/loans" }
+        ]
+      }
+    },
+    "Clusters": {
+      "mortgageCluster": {
+        "Destinations": {
+          "d1": {
+            "Address": "https://safeglobal-mortgage-api.azurewebsites.net/"
+          }
+        }
+      },
+      "loanCluster": {
+        "Destinations": {
+          "d1": {
+            "Address": "http://localhost:5160/"
+          }
+        }
+      }
+    }
+  }
+}
+
+Restart Gateway locally
+=======================
+dotnet run --urls=http://localhost:5000
+
+Test gateway locally
+====================
+http://localhost:5000/mortgages/api/mortgages
+
+
+Create web app to host LOANS API
+==================================
+az webapp create `
+  --name safeglobal-loan-api `
+  --resource-group safeglobal-rg `
+  --plan safeglobal-asp `
+  --runtime "DOTNET:8"
+
+Publish
+=======
+dotnet publish -c Release
+
+
+ZIP
+===
+Compress-Archive `
+  -Path .\bin\Release\net8.0\publish\* `
+  -DestinationPath loan-api.zip `
+  -Force
+
+
+Deploy
+======
+az webapp deploy `
+  --resource-group safeglobal-rg `
+  --name safeglobal-loan-api `
+  --src-path .\loan-api.zip `
+  --type zip
+
+
+Test
+====
+https://safeglobal-loan-api.azurewebsites.net/api/loans
+
+
+Update appsettings.json of GATEWAY project
+==========================================
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "ReverseProxy": {
+    "Routes": {
+      "mortgageRoute": {
+        "ClusterId": "mortgageCluster",
+        "Match": {
+          "Path": "/mortgages/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/mortgages" }
+        ]
+      },
+      "loanRoute": {
+        "ClusterId": "loanCluster",
+        "Match": {
+          "Path": "/loans/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/loans" }
+        ]
+      }
+    },
+    "Clusters": {
+      "mortgageCluster": {
+        "Destinations": {
+          "d1": {
+            "Address": "https://safeglobal-mortgage-api.azurewebsites.net/"
+          }
+        }
+      },
+      "loanCluster": {
+        "Destinations": {
+          "d1": {
+             "Address": "https://safeglobal-loan-api.azurewebsites.net/"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+Restart gateway locally
+=======================
+dotnet run --urls=http://localhost:5000
+
+
+TEST via Gateway LOCALLY
+=======================
+http://localhost:5000/loans/api/loans
+
+
+CREATE gateway WEB app
+=====================
+az webapp create `
+  --name safeglobal-gateway `
+  --resource-group safeglobal-rg `
+  --plan safeglobal-asp `
+  --runtime "DOTNET:8"
+
+Publish
+======
+dotnet publish -c Release
+
+ZIP
+===
+Compress-Archive `
+  -Path .\bin\Release\net8.0\publish\* `
+  -DestinationPath gateway.zip `
+  -Force
+
+Deploy
+=====
+az webapp deploy `
+  --resource-group safeglobal-rg `
+  --name safeglobal-gateway `
+  --src-path .\gateway.zip `
+  --type zip
+
+
+
+
+Test
+====
+https://safeglobal-gateway.azurewebsites.net/ - 404 expected
+
+Validate two individual via GAATEWAY
+===================================
+
+https://safeglobal-gateway.azurewebsites.net/mortgages/api/mortgages
+
+
+https://safeglobal-gateway.azurewebsites.net/loans/api/loans
+
+
+INTRODUCE AFD
+=============
+
+Created AFD Profile
+====================
+
+az afd profile create `
+  --profile-name safeglobal-afd `
+  --resource-group safeglobal-rg `
+  --sku Standard_AzureFrontDoor
+
+
+NAVIGATE Traffic in AFD
+=======================
+
+az afd origin-group create `
+  --resource-group safeglobal-rg `
+  --profile-name safeglobal-afd `
+  --origin-group-name safeglobal-gateway-og `
+  --probe-request-type GET `
+  --probe-protocol Https `
+  --probe-path / `
+  --sample-size 4 `
+  --successful-samples-required 3
+  
+
+
+RE-CREATE origin Group
+======================
+az afd origin-group create `
+  --resource-group safeglobal-rg `
+  --profile-name safeglobal-afd `
+  --origin-group-name safeglobal-gateway-og `
+  --probe-request-type GET `
+  --probe-protocol Https `
+  --probe-path / `
+  --probe-interval-in-seconds 30 `
+  --sample-size 4 `
+  --successful-samples-required 3
+  
+  Add gateway as origin in AFD
+============================
+
+az afd origin create `
+  --resource-group safeglobal-rg `
+  --profile-name safeglobal-afd `
+  --origin-group-name safeglobal-gateway-og `
+  --origin-name safeglobal-gateway-origin `
+  --host-name safeglobal-gateway.azurewebsites.net `
+  --origin-host-header safeglobal-gateway.azurewebsites.net `
+  --http-port 80 `
+  --https-port 443 `
+  --priority 1 `
+  --weight 100
+ 
+ Create Public Front door endpoint (DNS)
+ =======================================
+ 
+ az afd endpoint create `
+  --resource-group safeglobal-rg `
+  --profile-name safeglobal-afd `
+  --endpoint-name safeglobal-afd-endpoint
+
+
+CREATE AFD Route
+=================
+az afd route create `
+  --resource-group safeglobal-rg `
+  --profile-name safeglobal-afd `
+  --endpoint-name safeglobal-afd-endpoint `
+  --route-name safeglobal-route `
+  --origin-group safeglobal-gateway-og `
+  --supported-protocols Http Https `
+  --patterns-to-match "/*" `
+  --forwarding-protocol HttpsOnly `
+  --https-redirect Enabled `
+  --link-to-default-domain Enabled
+
+
+
+
+
+
+
