@@ -1,3 +1,7 @@
+TO DELETE ALL ABOVE RESOURCES
+============================
+az group delete --name safeglobal-rg --yes --no-wait
+
 Running both API locally works
 ==============================
 dotnet run 
