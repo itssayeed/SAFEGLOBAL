@@ -1,0 +1,12 @@
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Loan.API.exe
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\appsettings.Development.json
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\appsettings.json
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Loan.API.dll
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Loan.API.deps.json
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Loan.API.runtimeconfig.json
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Loan.API.pdb
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Microsoft.AspNetCore.OpenApi.dll
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Microsoft.OpenApi.dll
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.Swagger.dll
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\azure\safeglobal\src\backendapps\loan.api\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll

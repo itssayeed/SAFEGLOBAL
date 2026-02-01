@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mortgage.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+78f730923cac09137f2cd4116f8a4d09464b63e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f28ae29ec519773e02aee6826a507a156bdc2fd6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mortgage.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mortgage.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
